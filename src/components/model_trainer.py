@@ -69,13 +69,3 @@ class ModelTrainer:
         except Exception as e:
             raise CustomException(e,sys)
 
-if __name__ == "__main__":
-    
-
-    ingestion  = DataIngestion()
-    train_path,test_path = ingestion.initiate_data_ingestion()
-    transform = DataTransformation()
-    train_arr,test_arr,X_train,y_train = transform.initiate_data_transformation(train_file_path=train_path,test_file_path=test_path)
-    
-    trainer  = ModelTrainer()
-    trainer.initiate_model_trainer(train_arr,test_arr)

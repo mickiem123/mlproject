@@ -50,13 +50,3 @@ class Predictor:
         except Exception as e:
             raise CustomException(e,sys)
 
-if __name__ == "__main__":
-    predictor = Predictor()
-    data = CustomData(gender="female",
-                      race_ethnicity="group A",
-                      parental_level_of_education= "bachelor's degree",
-                      lunch= "standard",
-                      test_preparation_course="none",
-                      reading_score= 70,
-                      writing_score= 80 )
-    print(predictor.predict(data))
