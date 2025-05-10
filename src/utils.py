@@ -36,7 +36,23 @@ def save_object(file_path, obj):
             dill.dump(obj, file)
     except Exception as e:
         raise CustomException(e, sys) from e
+def load_object(file_path):
+    """
+    Load an object from a file using pickle.
     
+    Parameters:
+    - file_path (str): The path to the file from which the object will be loaded.
+    
+    Returns:
+    - The loaded object.
+    """
+    try:
+        logging.info(f"Loading object from {file_path}")
+        with open(file_path, 'rb') as file:
+            return dill.load(file)
+    except Exception as e:
+        raise CustomException(e, sys) from e
+            
 def model_evaluation(models: dict,X_train,y_train,X_test = 0,y_test =0):
     """Return dataframe of model score"""
     results = results = defaultdict(lambda: defaultdict(dict))
