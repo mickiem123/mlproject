@@ -14,6 +14,16 @@ from src.logger import logging
 
 @dataclass
 class DataTransformationConfig:
+    target_column_name = 'math_score'
+    numerical_features = ['writing_score', 'reading_score']
+    categorical_features = [
+                'gender',
+                'race_ethnicity',
+                'parental_level_of_education',
+                'lunch',
+                'test_preparation_course'
+            ]
+            
     preprocessor_obj_file_path = os.path.join('artifacts', 'preprocessor.pkl')
     transformed_train_file_path = os.path.join('artifacts', 'train_transformed.csv')
     transformed_test_file_path = os.path.join('artifacts', 'test_transformed.csv')
@@ -49,26 +59,18 @@ class DataTransformation:
 
 
     def initiate_data_transformation(self,train_file_path,test_file_path):
-        numerical_features = ['writing_score', 'reading_score']
-        categorical_features = [
-                'gender',
-                'race_ethnicity',
-                'parental_level_of_education',
-                'lunch',
-                'test_preparation_course'
-            ]
-            
+        
         try:
             df_train = pd.read_csv(train_file_path)
             df_test = pd.read_csv(test_file_path)   
             logging.info('Read train and test data')
             logging.info('Obtaining preprocessing object')
-            preprocessing_obj = self.get_data_transformer_object(numerical_features, categorical_features)
-            target_column_name = 'math_score'
-            input_features_train = df_train.drop(columns =[target_column_name])
-            target_feature_train = df_train[target_column_name]
-            input_feature_test = df_test.drop(columns =[target_column_name])
-            target_feature_test = df_test[target_column_name]
+            preprocessing_obj = self.get_data_transformer_object(self.data_transformation_config.numerical_features, self.data_transformation_config.categorical_features)
+            
+            input_features_train = df_train.drop(columns =[self.data_transformation_config.target_column_name])
+            target_feature_train = df_train[self.data_transformation_config.target_column_name]
+            input_feature_test = df_test.drop(columns =[self.data_transformation_config.target_column_name])
+            target_feature_test = df_test[self.data_transformation_config.target_column_name]
             logging.info('Applying preprocessing object on training and testing data')
             
             input_features_trained = preprocessing_obj.fit_transform(input_features_train)
