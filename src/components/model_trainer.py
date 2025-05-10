@@ -35,7 +35,7 @@ class ModelTrainer:
                 test_array[:,:-1],
                 test_array[:,-1]
             )
-            print(X_train.shape,y_train.shape)
+       
             models = {
                 "Random Forest": RandomForestRegressor(),
                 "Linear Regression": LinearRegression(),
