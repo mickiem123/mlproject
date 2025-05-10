@@ -29,6 +29,7 @@ class DataTransformationConfig:
     transformed_test_file_path = os.path.join('artifacts', 'test_transformed.csv')
 
 class DataTransformation:
+    
     def __init__(self):
         self.data_transformation_config = DataTransformationConfig()
     def get_data_transformer_object(self,numerical_features, categorical_features):
@@ -42,7 +43,8 @@ class DataTransformation:
             )
             cat_transformer = Pipeline(
                 steps = [
-                    ('imputer',SimpleImputer(strategy='most_frequent'))
+                    ('imputer',SimpleImputer(strategy='most_frequent')),
+                    ('encoder',OneHotEncoder())
                 ]
             )
 
@@ -59,7 +61,12 @@ class DataTransformation:
 
 
     def initiate_data_transformation(self,train_file_path,test_file_path):
-        
+
+        """ 
+        Input train and test file paths
+        Return train arr and test arr as numpy array
+        Also return X_train and y_train
+        """
         try:
             df_train = pd.read_csv(train_file_path)
             df_test = pd.read_csv(test_file_path)   
@@ -74,6 +81,7 @@ class DataTransformation:
             logging.info('Applying preprocessing object on training and testing data')
             
             input_features_trained = preprocessing_obj.fit_transform(input_features_train)
+         
             input_features_tested = preprocessing_obj.transform(input_feature_test)
             train_arr = np.concatenate([input_features_trained, target_feature_train.to_numpy().reshape(-1, 1)], axis=1)
             test_arr = np.concatenate([input_features_tested, target_feature_test.to_numpy().reshape(-1, 1)], axis=1)
@@ -84,6 +92,8 @@ class DataTransformation:
                 file_path=self.data_transformation_config.preprocessor_obj_file_path,
                 obj=preprocessing_obj
             )
+            
+            return train_arr,test_arr,input_features_trained,target_feature_train
            
         except Exception as e:
             raise CustomException(e, sys)
